@@ -1,11 +1,10 @@
 import React from 'react';
-import Alert from 'react-bootstrap/Alert';
 import ButtonToolbar from 'react-bootstrap/ButtonToolbar';
 import Button from 'react-bootstrap/Button';
 import styles from './BookDetails.module.css';
 import { Header } from '../../components/Header/Header';
-import Spinner from 'react-bootstrap/Spinner';
 import { useBookDetails, useBookRemove } from './BookDetails.hooks';
+import { LoadingErrorState } from '../../components/LoadingErrorState/LoadingErrorState';
 
 export const BookDetails = () => {
     const { loading, error, bookDetails } = useBookDetails();
@@ -13,11 +12,10 @@ export const BookDetails = () => {
 
     return (
       <div className={styles.container}>
-          <Header>
+          <Header backToLibrary>
               Book Details
           </Header>
-          {loading ? <Spinner animation="border" variant="primary" data-testid={'spinner'} /> : null}
-          {error ? <Alert variant={'danger'}>Unable to fetch book details, please try again.</Alert> : null}
+          <LoadingErrorState errorText={'Unable to fetch book details, please try again.'} loading={loading} error={error}/>
           {
               bookDetails ? (
                   <div className={styles.details}>

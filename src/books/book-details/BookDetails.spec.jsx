@@ -71,6 +71,17 @@ describe('Displaying book details', () => {
         await waitFor(pathToBeChangedTo('/books'));
     });
 
+    it('should allow to get back to list', async () => {
+        const bookDetails = { id: bookId, title: 'The Hobbit', author: 'J.R.R. Tolkien', pages: '310' };
+        givenBookFetch(bookId, bookDetails);
+        renderComponent(bookId);
+
+        const backButton = await screen.findByRole('link', { name: 'Back to library' });
+        userEvent.click(backButton);
+
+        await waitFor(pathToBeChangedTo('/books'));
+    });
+
     // TODO: edit a book
 
     const renderComponent = (bookId) => {
