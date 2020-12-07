@@ -1,7 +1,7 @@
 {
   "books": [
     {
-      "id": 1,
+      "id": "1",
       "title": "The Hobbit",
       "author": "J.R.R. Tolkien",
       "pages": "310"
@@ -10,7 +10,7 @@
       "title": "The Fellowship of the Ring",
       "author": "J.R.R. Tolkien",
       "pages": "423",
-      "id": 2
+      "id": "2"
     }
   ]
 }

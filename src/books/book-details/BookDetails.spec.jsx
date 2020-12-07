@@ -71,6 +71,8 @@ describe('Displaying book details', () => {
         await waitFor(pathToBeChangedTo('/books'));
     });
 
+    // TODO: edit a book
+
     const renderComponent = (bookId) => {
         window.history.pushState({}, 'Book details', `/books/${bookId}`);
         return render(

@@ -29,7 +29,7 @@ export const BookDetails = () => {
                       </p>
                       <p className={styles.pages}>
                           <strong>Pages:</strong>
-                          <div>{bookDetails.pages}</div>
+                          <span>{bookDetails.pages}</span>
                       </p>
                       <ButtonToolbar className={styles.buttons}>
                           <Button variant={'danger'} onClick={handleRemove}>Remove</Button>
