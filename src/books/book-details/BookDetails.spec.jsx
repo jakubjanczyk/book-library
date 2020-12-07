@@ -13,25 +13,6 @@ describe('Displaying book details', () => {
 
     const bookId = '123';
 
-    const givenBookFetch = (bookId, bookDetails) => {
-        nock('http://localhost')
-          .get(`/api/books/${bookId}`)
-          .once()
-          .reply(200, bookDetails);
-    };
-    const givenBookRemove = (bookId) => {
-        nock('http://localhost')
-          .delete(`/api/books/${bookId}`)
-          .once()
-          .reply(204);
-    };
-    const givenBookFetchFailed = (bookId) => {
-        nock('http://localhost')
-          .get(`/api/books/${bookId}`)
-          .once()
-          .reply(500, {});
-    };
-
     it('should fetch and display book details', async () => {
         const bookDetails = { id: bookId, title: 'The Hobbit', author: 'J.R.R. Tolkien', pages: '310' };
         givenBookFetch(bookId, bookDetails);
@@ -82,7 +63,27 @@ describe('Displaying book details', () => {
         await waitFor(pathToBeChangedTo('/books'));
     });
 
-    // TODO: edit a book
+    it('should allow to edit a book', async () => {
+        const bookDetails = { id: bookId, title: 'The Hobbit', author: 'J.R.R. Tolkien', pages: '310' };
+        givenBookFetch(bookId, bookDetails);
+        renderComponent(bookId);
+
+        const editButton = await screen.findByRole('button', { name: 'Edit' });
+        userEvent.click(editButton);
+
+        givenBookUpdate(bookId, { id: bookId, title: 'Harry Potter', author: 'J.K. Rowling', pages: '550' })
+        userEvent.clear(titleInput());
+        userEvent.clear(authorInput());
+        userEvent.clear(pagesInput());
+        userEvent.type(titleInput(), 'Harry Potter');
+        userEvent.type(authorInput(), 'J.K. Rowling');
+        userEvent.type(pagesInput(), '550');
+        userEvent.click(saveButton());
+
+        expect(await screen.findByText('Harry Potter')).toBeInTheDocument();
+        expect(await screen.findByText('J.K. Rowling')).toBeInTheDocument();
+        expect(await screen.findByText('550')).toBeInTheDocument();
+    });
 
     const renderComponent = (bookId) => {
         window.history.pushState({}, 'Book details', `/books/${bookId}`);
@@ -91,5 +92,35 @@ describe('Displaying book details', () => {
             <Route path={'/books/:id'} component={BookDetails}/>
         </BrowserRouter>
         );
+    };
+
+    const titleInput = () => screen.getByLabelText('Title');
+    const authorInput = () => screen.getByLabelText('Author');
+    const pagesInput = () => screen.getByLabelText('Pages');
+    const saveButton = () => screen.getByRole('button', { name: 'Save' });
+
+    const givenBookFetch = (bookId, bookDetails) => {
+        nock('http://localhost')
+          .get(`/api/books/${bookId}`)
+          .once()
+          .reply(200, bookDetails);
+    };
+    const givenBookUpdate = (bookId, bookDetails) => {
+        nock('http://localhost')
+          .put(`/api/books/${bookId}`, bookDetails)
+          .once()
+          .reply(204);
+    };
+    const givenBookRemove = (bookId) => {
+        nock('http://localhost')
+          .delete(`/api/books/${bookId}`)
+          .once()
+          .reply(204);
+    };
+    const givenBookFetchFailed = (bookId) => {
+        nock('http://localhost')
+          .get(`/api/books/${bookId}`)
+          .once()
+          .reply(500, {});
     };
 });

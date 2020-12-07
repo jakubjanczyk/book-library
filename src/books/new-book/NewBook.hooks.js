@@ -5,8 +5,7 @@ export const useBookSave = () => {
     const history = useHistory();
     const [error, setError] = useState(false);
 
-    const handleSave = (bookData) => async (event) => {
-        event.preventDefault();
+    const handleSave = async (bookData) => {
         setError(false);
         const body = JSON.stringify(bookData);
         const headers = { 'Content-Type': 'application/json' };

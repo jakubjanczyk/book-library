@@ -1,15 +1,23 @@
-import React from 'react';
-import ButtonToolbar from 'react-bootstrap/ButtonToolbar';
-import Button from 'react-bootstrap/Button';
+import React, { useState } from 'react';
 import styles from './BookDetails.module.css';
 import { Header } from '../../components/Header/Header';
 import { useBookDetails, useBookRemove } from './BookDetails.hooks';
 import { LoadingErrorState } from '../../components/LoadingErrorState/LoadingErrorState';
+import { BookForm } from '../components/BookForm/BookForm';
+import { BookDetailsView } from './BookDetailsView';
+
 
 export const BookDetails = () => {
-    const { loading, error, bookDetails } = useBookDetails();
+    const { loading, error, bookDetails, update, updateError } = useBookDetails();
     const handleRemove = useBookRemove();
+    const [editing, setEditing] = useState(false);
 
+    const handleEdit = () => setEditing(true);
+    const closeEdit = () => setEditing(false);
+
+    const handleSave = (details) => {
+        update(details).then(closeEdit);
+    }
     return (
       <div className={styles.container}>
           <Header backToLibrary>
@@ -18,21 +26,13 @@ export const BookDetails = () => {
           <LoadingErrorState errorText={'Unable to fetch book details, please try again.'} loading={loading} error={error}/>
           {
               bookDetails ? (
-                  <div className={styles.details}>
-                      <h2 className={styles.title}>
-                          {bookDetails.title}
-                      </h2>
-                      <p className={styles.author}>
-                          {bookDetails.author}
-                      </p>
-                      <p className={styles.pages}>
-                          <strong>Pages:</strong>
-                          <span>{bookDetails.pages}</span>
-                      </p>
-                      <ButtonToolbar className={styles.buttons}>
-                          <Button variant={'danger'} onClick={handleRemove}>Remove</Button>
-                      </ButtonToolbar>
-                  </div>
+                editing ? (
+                    <BookForm cancel={closeEdit} error={updateError} save={handleSave} initialState={bookDetails}/>
+                  )
+                  : (
+                    <BookDetailsView bookDetails={bookDetails} handleEdit={handleEdit} handleRemove={handleRemove} />
+                  )
+
                 )
                 : null
           }
