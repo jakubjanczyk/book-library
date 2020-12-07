@@ -6,10 +6,11 @@ import Alert from 'react-bootstrap/Alert';
 import { ButtonToolbar } from 'react-bootstrap';
 import styles from './NewBook.module.css';
 import { Header } from '../../components/Header/Header';
+import { useBookSave } from './NewBook.hooks';
 
 export const NewBook = () => {
     const [formState, setFormState] = useState({ title: '', author: '', pages: '' });
-    const [error, setError] = useState(false);
+    const { save, saveError } = useBookSave();
     const history = useHistory();
 
     const updateField = (field) => (event) => {
@@ -18,20 +19,6 @@ export const NewBook = () => {
             ...previousState,
             [field]: value
         }));
-    };
-
-    const handleSave = async (event) => {
-        event.preventDefault();
-        setError(false);
-        const body = JSON.stringify(formState);
-        const headers = { 'Content-Type': 'application/json' };
-        const response = await fetch('/api/books', { method: 'post', body, headers });
-        if (response.ok) {
-            const data = await response.json();
-            history.push(`/books/${data.id}`);
-        } else {
-            setError(true);
-        }
     };
 
     const handleCancel = () => {
@@ -43,8 +30,8 @@ export const NewBook = () => {
           <Header>
               Add new book
           </Header>
-          <Form onSubmit={handleSave} className={styles.form}>
-              {error ? <Alert variant={'danger'}>Something went wrong, please try again.</Alert> : null}
+          <Form onSubmit={save(formState)} className={styles.form}>
+              {saveError ? <Alert variant={'danger'}>Something went wrong, please try again.</Alert> : null}
               <Form.Group className={styles.formGroup}>
                   <Form.Label htmlFor={'title'}>
                       Title

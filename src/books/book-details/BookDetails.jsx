@@ -1,40 +1,15 @@
-import React, { useEffect, useState } from 'react';
-import { useHistory, useParams } from 'react-router';
+import React from 'react';
 import Alert from 'react-bootstrap/Alert';
 import ButtonToolbar from 'react-bootstrap/ButtonToolbar';
 import Button from 'react-bootstrap/Button';
 import styles from './BookDetails.module.css';
 import { Header } from '../../components/Header/Header';
 import Spinner from 'react-bootstrap/Spinner';
+import { useBookDetails, useBookRemove } from './BookDetails.hooks';
 
 export const BookDetails = () => {
-    const params = useParams();
-    const history = useHistory();
-    const bookId = params.id;
-    const [bookDetails, setBookDetails] = useState();
-    const [loading, setLoading] = useState(false);
-    const [error, setError] = useState(false);
-
-    useEffect(() => {
-        setLoading(true);
-        fetch(`/api/books/${bookId}`)
-          .then(response => response.ok ? response.json() : Promise.reject(response))
-          .then(book => {
-              setBookDetails(book);
-              setLoading(false);
-          })
-          .catch(() => {
-              setLoading(false);
-              setError(true);
-          });
-    }, [bookId]);
-
-    const handleRemove = async () => {
-        const response = await fetch(`/api/books/${bookId}`, { method: 'delete' });
-        if (response.ok) {
-            history.push('/books');
-        }
-    };
+    const { loading, error, bookDetails } = useBookDetails();
+    const handleRemove = useBookRemove();
 
     return (
       <div className={styles.container}>
@@ -46,16 +21,16 @@ export const BookDetails = () => {
           {
               bookDetails ? (
                   <div className={styles.details}>
-                      <div className={styles.title}>
+                      <h2 className={styles.title}>
                           {bookDetails.title}
-                      </div>
-                      <div className={styles.author}>
+                      </h2>
+                      <p className={styles.author}>
                           {bookDetails.author}
-                      </div>
-                      <div className={styles.pages}>
+                      </p>
+                      <p className={styles.pages}>
                           <strong>Pages:</strong>
                           <div>{bookDetails.pages}</div>
-                      </div>
+                      </p>
                       <ButtonToolbar className={styles.buttons}>
                           <Button variant={'danger'} onClick={handleRemove}>Remove</Button>
                       </ButtonToolbar>

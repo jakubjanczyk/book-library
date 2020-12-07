@@ -3,9 +3,9 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 export const Header = ({children}) => (
-    <div className={styles.header}>
+    <h1 className={styles.header}>
         {children}
-    </div>
+    </h1>
 )
 
 Header.propTypes = {

@@ -9,14 +9,15 @@
     display: flex;
     flex-direction: column;
     align-items: flex-start;
+    width: 400px;
 }
 
 .title {
-    font-size: 48px;
 }
 
 .author {
-    font-size: 20px;
+    font-size: 18px;
+    margin-bottom: 12px;
 }
 
 .pages {
