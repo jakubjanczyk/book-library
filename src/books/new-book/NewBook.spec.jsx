@@ -4,6 +4,7 @@ import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import nock from 'nock';
 import { BrowserRouter } from 'react-router-dom';
+import { pathToBeChangedTo } from '../../test-utils/router-utils';
 
 describe('Adding a book', () => {
     beforeEach(() => {
@@ -113,5 +114,6 @@ describe('Adding a book', () => {
     const cancelButton = () => screen.getByRole('button', { name: 'Cancel' });
     const errorAlert = () => screen.findByRole('alert');
 
-    const pathToBeChangedTo = newPath => () => new Promise((resolve, reject) => window.location.pathname === newPath ? resolve() : reject());
 });
+
+

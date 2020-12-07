@@ -5,6 +5,7 @@ import { useHistory } from 'react-router';
 import Alert from 'react-bootstrap/Alert';
 import { ButtonToolbar } from 'react-bootstrap';
 import styles from './NewBook.module.css';
+import { Header } from '../../components/Header/Header';
 
 export const NewBook = () => {
     const [formState, setFormState] = useState({ title: '', author: '', pages: '' });
@@ -39,9 +40,9 @@ export const NewBook = () => {
 
     return (
       <div className={styles.container}>
-          <div className={styles.header}>
+          <Header>
               Add new book
-          </div>
+          </Header>
           <Form onSubmit={handleSave} className={styles.form}>
               {error ? <Alert variant={'danger'}>Something went wrong, please try again.</Alert> : null}
               <Form.Group className={styles.formGroup}>
