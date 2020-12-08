@@ -55,8 +55,8 @@ export const BooksList = () => {
                       books.length === 0
                         ? (
                             <div className={styles.noBooksContainer}>
-                                <h4 className={styles.noBooksText}>There are no books yet. Change filters or create a new book.</h4>
                                 <NewBookButton />
+                                <h4 className={styles.noBooksText}>There are no books yet. Change filters or create a new book.</h4>
                             </div>
                         )
                         : (
