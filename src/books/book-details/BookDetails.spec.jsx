@@ -109,7 +109,7 @@ describe('Displaying book details', () => {
         nock('http://localhost')
           .put(`/api/books/${bookId}`, bookDetails)
           .once()
-          .reply(204);
+          .reply(200, bookDetails);
     };
     const givenBookRemove = (bookId) => {
         nock('http://localhost')

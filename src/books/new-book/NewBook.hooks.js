@@ -1,22 +1,20 @@
 import { useHistory } from 'react-router';
-import { useState } from 'react';
+import { useCallback, useState } from 'react';
+import { httpClient } from '../../common/http-client';
 
 export const useBookSave = () => {
     const history = useHistory();
     const [error, setError] = useState(false);
 
-    const handleSave = async (bookData) => {
+    const handleSave = useCallback(async (bookData) => {
         setError(false);
-        const body = JSON.stringify(bookData);
-        const headers = { 'Content-Type': 'application/json' };
-        const response = await fetch('/api/books', { method: 'post', body, headers });
-        if (response.ok) {
-            const data = await response.json();
+        try {
+            const data = await httpClient().post('books', bookData);
             history.push(`/books/${data.id}`);
-        } else {
+        } catch (e) {
             setError(true);
         }
-    };
+    }, [history]);
 
     return { save: handleSave, saveError: error };
 };
