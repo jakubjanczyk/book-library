@@ -304,7 +304,7 @@ describe('Books list', () => {
         );
     };
 
-    const noBooksPlaceholder = async () => screen.findByText('There are no books yet. Change filters or create a new book.');
+    const noBooksPlaceholder = async () => screen.findByText(/No books to display/);
 
     const getSortSelect = async () => await screen.findByLabelText('Sort:');
 
