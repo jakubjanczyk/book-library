@@ -4,12 +4,14 @@ import { useFetchRequest } from '../../common/use-fetch-request';
 import { useHistory, useLocation } from 'react-router';
 import * as qs from 'qs';
 
-
 const parseFilters = searchString => qs.parse(searchString, { ignoreQueryPrefix: true });
+
 const useFilters = () => {
     const history = useHistory();
     const location = useLocation();
+
     const filters = useMemo(() => parseFilters(location.search), [location]);
+
     const updateFilters = useCallback((newFilters) => {
         const previousFilters = parseFilters(history.location.search);
         const allFilters = {
@@ -30,7 +32,6 @@ export const useBooks = () => {
     const initialBooks = useRef(undefined);
     const { filters, updateFilters } = useFilters();
     const { error, loading, fetchData } = useFetchRequest();
-
 
     const orderedBooks = useCallback(books => {
         const { by, order } = filters.sort === 'recent' ? { by: 'created', order: 'desc' } : { by: 'title', order: filters.sort };
