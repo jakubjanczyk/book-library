@@ -12,6 +12,15 @@ export const BookDetailsView = ({ bookDetails, handleEdit, handleRemove }) => (
       <p className={styles.author}>
           {bookDetails.author}
       </p>
+      {
+          bookDetails.category ? (
+              <p className={styles.category}>
+                  <strong>Category:</strong>
+                  <span>{bookDetails.category}</span>
+              </p>
+            )
+            : null
+      }
       <p className={styles.pages}>
           <strong>Pages:</strong>
           <span>{bookDetails.pages}</span>
@@ -27,7 +36,8 @@ BookDetailsView.propTypes = {
     bookDetails: PropTypes.shape({
         title: PropTypes.string.isRequired,
         author: PropTypes.string.isRequired,
-        pages: PropTypes.string.isRequired
+        pages: PropTypes.string.isRequired,
+        category: PropTypes.string
     }).isRequired,
     handleEdit: PropTypes.func.isRequired,
     handleRemove: PropTypes.func.isRequired

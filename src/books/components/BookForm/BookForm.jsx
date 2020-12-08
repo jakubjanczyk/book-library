@@ -5,6 +5,7 @@ import Alert from 'react-bootstrap/Alert';
 import { ButtonToolbar } from 'react-bootstrap';
 import Button from 'react-bootstrap/Button';
 import PropTypes from 'prop-types';
+import { categories } from '../../../static/categories';
 
 export const BookForm = ({ initialState, save, cancel, error }) => {
     const [formState, setFormState] = useState(initialState);
@@ -36,6 +37,17 @@ export const BookForm = ({ initialState, save, cancel, error }) => {
               <Form.Control id={'author'} type="text" placeholder="Enter author" value={formState.author} onChange={updateField('author')} />
           </Form.Group>
           <Form.Group className={styles.formGroup}>
+              <Form.Label htmlFor={'category'}>
+                  Category
+              </Form.Label>
+              <Form.Control id={'category'} as={'select'} placeholder="Select category" value={formState.category} onChange={updateField('category')}>
+                  <option hidden value={undefined}>Select category</option>
+                  {
+                      categories().map(category => (<option key={category} value={category}>{category}</option>))
+                  }
+              </Form.Control>
+          </Form.Group>
+          <Form.Group className={styles.formGroup}>
               <Form.Label htmlFor={'pages'}>
                   Pages
               </Form.Label>
@@ -62,4 +74,4 @@ BookForm.propTypes = {
     save: PropTypes.func.isRequired,
     cancel: PropTypes.func.isRequired,
     error: PropTypes.bool.isRequired
-}
+};

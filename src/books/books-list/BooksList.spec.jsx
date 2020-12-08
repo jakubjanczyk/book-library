@@ -1,4 +1,4 @@
-import { render, screen, waitFor, waitForElementToBeRemoved } from '@testing-library/react';
+import { render, screen, waitFor, waitForElementToBeRemoved, within } from '@testing-library/react';
 import { BrowserRouter } from 'react-router-dom';
 import React from 'react';
 import { BooksList } from './BooksList';
@@ -9,6 +9,13 @@ import { pathToBeChangedTo } from '../../test-utils/router-utils';
 describe('Books list', () => {
     beforeEach(() => {
         nock.cleanAll();
+    });
+
+    it('should display placeholder when no books fetched', async () => {
+        givenBooksFetched([]);
+        renderComponent();
+
+        expect(await noBooksPlaceholder()).toBeInTheDocument();
     });
 
     it('should fetch and display list of available books', async () => {
@@ -73,8 +80,111 @@ describe('Books list', () => {
         await waitFor(pathToBeChangedTo('/books/new'));
     });
 
-    const renderComponent = () => {
-        window.history.pushState({}, 'Books list', `/books`);
+    it('should allow to create new book when some books exist', async () => {
+        const books = [
+            { id: '1', title: 'The Fellowship of the Ring', author: 'J.R.R. Tolkien', pages: '423' },
+            { id: '2', title: 'The Hobbit', author: 'J.R.R. Tolkien', pages: '310' },
+        ];
+        givenBooksFetched(books);
+        renderComponent();
+
+        userEvent.click(await screen.findByRole('button', {name: /New book/}));
+
+        await waitFor(pathToBeChangedTo('/books/new'));
+    });
+
+    describe('handling categories', () => {
+        it('should display available categories to select from', async () => {
+            givenBooksFetched([]);
+            renderComponent();
+
+            const categoriesList = await screen.findByTestId('categories');
+            const allCategories = within(categoriesList).getAllByRole('listitem').map(item => item.textContent);
+
+            expect(allCategories).toEqual(['Fantasy', 'Sci-Fi', 'Biography', 'History', 'Unassigned']);
+        });
+
+        it('should click on category and filter books by this category', async () => {
+            givenBooksFetched([
+                { id: '1', title: 'The Fellowship of the Ring', author: 'J.R.R. Tolkien', pages: '423', category: 'Fantasy' },
+                { id: '2', title: 'The Hobbit', author: 'J.R.R. Tolkien', pages: '310', category: 'Fantasy' },
+                { id: '3', title: 'Dune', author: 'Frank Herbert', pages: '890', category: 'Sci-Fi' },
+            ]);
+            renderComponent();
+
+            await clickCategory('Fantasy');
+
+            expect(await getDisplayedBooksTitles()).toEqual(['The Fellowship of the Ring', 'The Hobbit']);
+        });
+
+        it('should show no books placeholder when filtered out everything', async () => {
+            givenBooksFetched([
+                { id: '1', title: 'The Fellowship of the Ring', author: 'J.R.R. Tolkien', pages: '423', category: 'Fantasy' },
+                { id: '2', title: 'The Hobbit', author: 'J.R.R. Tolkien', pages: '310', category: 'Fantasy' },
+                { id: '3', title: 'Dune', author: 'Frank Herbert', pages: '890', category: 'Sci-Fi' },
+            ]);
+            renderComponent();
+
+            await clickCategory('History');
+
+            expect(await noBooksPlaceholder()).toBeInTheDocument();
+        });
+
+        it('should click second time on category and show all books', async () => {
+            givenBooksFetched([
+                { id: '1', title: 'The Fellowship of the Ring', author: 'J.R.R. Tolkien', pages: '423', category: 'Fantasy' },
+                { id: '2', title: 'The Hobbit', author: 'J.R.R. Tolkien', pages: '310', category: 'Fantasy' },
+                { id: '3', title: 'Dune', author: 'Frank Herbert', pages: '890', category: 'Sci-Fi' },
+            ]);
+            renderComponent();
+
+            await clickCategory('Fantasy');
+            await clickCategory('Fantasy');
+
+            expect(await getDisplayedBooksTitles()).toEqual(['Dune', 'The Fellowship of the Ring', 'The Hobbit']);
+        });
+
+        it('should allow to select unassigned books', async () => {
+            givenBooksFetched([
+                { id: '1', title: 'The Fellowship of the Ring', author: 'J.R.R. Tolkien', pages: '423', category: 'Fantasy' },
+                { id: '2', title: 'The Hobbit', author: 'J.R.R. Tolkien', pages: '310', category: 'Fantasy' },
+                { id: '3', title: 'Dune', author: 'Frank Herbert', pages: '890' },
+            ]);
+            renderComponent();
+
+            await clickCategory('Unassigned');
+
+            expect(await getDisplayedBooksTitles()).toEqual(['Dune']);
+        });
+
+        it('should save selected category to URL', async () => {
+            givenBooksFetched([
+                { id: '1', title: 'The Fellowship of the Ring', author: 'J.R.R. Tolkien', pages: '423', category: 'Fantasy' },
+                { id: '2', title: 'The Hobbit', author: 'J.R.R. Tolkien', pages: '310', category: 'Fantasy' },
+                { id: '3', title: 'Dune', author: 'Frank Herbert', pages: '890', category: 'Sci-Fi' },
+            ]);
+            renderComponent();
+
+            await clickCategory('Fantasy');
+
+            expect(window.location.search).toEqual('?category=Fantasy');
+        });
+
+        it('should restore selected category from URL', async () => {
+            givenBooksFetched([
+                { id: '1', title: 'The Fellowship of the Ring', author: 'J.R.R. Tolkien', pages: '423', category: 'Fantasy' },
+                { id: '2', title: 'The Hobbit', author: 'J.R.R. Tolkien', pages: '310', category: 'Fantasy' },
+                { id: '3', title: 'Dune', author: 'Frank Herbert', pages: '890', category: 'Sci-Fi' },
+            ]);
+
+            renderComponent({searchString: '?category=Fantasy'});
+
+            expect(await getDisplayedBooksTitles()).toEqual(['The Fellowship of the Ring', 'The Hobbit']);
+        });
+    });
+
+    const renderComponent = ({searchString = ''} = {}) => {
+        window.history.pushState({}, 'Books list', `/books${searchString}`);
         return render(
           <BrowserRouter>
               <BooksList />
@@ -82,9 +192,16 @@ describe('Books list', () => {
         );
     }
 
+    const noBooksPlaceholder = async () => screen.findByText('There are no books yet. Change filters or create a new book.');
+
     const getDisplayedBooksTitles = async () => {
         const bookTitles = await screen.findAllByTestId('book-title');
         return bookTitles.map(el => el.textContent);
+    };
+
+    const clickCategory = async (category) => {
+        const categoriesList = await screen.findByTestId('categories');
+        userEvent.click(within(categoriesList).getByText(category));
     };
 
     const givenBooksFetched = books => {
@@ -93,7 +210,7 @@ describe('Books list', () => {
           .reply(200, books);
     };
 
-    const givenBooksFetchFailed = books => {
+    const givenBooksFetchFailed = () => {
         nock('http://localhost')
           .get('/api/books')
           .reply(500, { });

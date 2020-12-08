@@ -16,15 +16,17 @@
 }
 
 .author {
-    font-size: 18px;
+    font-size: 20px;
     margin-bottom: 12px;
 }
 
-.pages {
+
+.pages, .category {
     display: flex;
+    font-size: 16px;
 }
 
-.pages > strong {
+.pages > strong, .category > strong {
     margin-right: 8px;
 }
 

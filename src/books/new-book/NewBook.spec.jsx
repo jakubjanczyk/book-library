@@ -1,6 +1,6 @@
 import { NewBook } from './NewBook';
 import React from 'react';
-import { render, screen, waitFor } from '@testing-library/react';
+import { render, screen, waitFor, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import nock from 'nock';
 import { BrowserRouter } from 'react-router-dom';
@@ -43,13 +43,30 @@ describe('Adding a book', () => {
         expect(pagesInput()).toHaveValue(310);
     });
 
+    it('should show available categories to select', () => {
+        renderComponent();
+
+        const allOptions = within(categorySelect()).getAllByRole('option').map(option => option.textContent);
+
+        expect(allOptions).toEqual(['Fantasy', 'Sci-Fi', 'Biography', 'History']);
+    });
+
+    it('should allow to select category', () => {
+        renderComponent();
+
+        userEvent.selectOptions(categorySelect(), 'Biography')
+
+        expect(categorySelect()).toHaveValue('Biography');
+    });
+
     it('should allow to save new book with all fields provided and change page to details', async () => {
-        givenSaveRequest({ title: 'The Hobbit', author: 'J.R.R. Tolkien', pages: '310' }, '12345');
+        givenSaveRequest({ title: 'The Hobbit', author: 'J.R.R. Tolkien', pages: '310', category: 'Fantasy' }, '12345');
         renderComponent();
 
         userEvent.type(titleInput(), 'The Hobbit');
         userEvent.type(authorInput(), 'J.R.R. Tolkien');
         userEvent.type(pagesInput(), '310');
+        userEvent.selectOptions(categorySelect(), 'Fantasy');
         userEvent.click(saveButton());
 
         const pathToBeChanged = pathToBeChangedTo('/books/12345');
@@ -110,6 +127,7 @@ describe('Adding a book', () => {
     const titleInput = () => screen.getByLabelText('Title');
     const authorInput = () => screen.getByLabelText('Author');
     const pagesInput = () => screen.getByLabelText('Pages');
+    const categorySelect = () => screen.getByLabelText('Category');
     const saveButton = () => screen.getByRole('button', { name: 'Save' });
     const cancelButton = () => screen.getByRole('button', { name: 'Cancel' });
     const errorAlert = () => screen.findByRole('alert');

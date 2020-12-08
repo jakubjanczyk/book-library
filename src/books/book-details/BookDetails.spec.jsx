@@ -12,24 +12,35 @@ describe('Displaying book details', () => {
     });
 
     const bookId = '123';
+    const bookDetails = { id: bookId, title: 'The Hobbit', author: 'J.R.R. Tolkien', pages: '310', category: 'Fantasy' };
 
     it('should fetch and display book details', async () => {
-        const bookDetails = { id: bookId, title: 'The Hobbit', author: 'J.R.R. Tolkien', pages: '310' };
         givenBookFetch(bookId, bookDetails);
+
         renderComponent(bookId);
 
         expect(await screen.findByText('The Hobbit')).toBeInTheDocument();
         expect(await screen.findByText('J.R.R. Tolkien')).toBeInTheDocument();
+        expect(await screen.findByText('Fantasy')).toBeInTheDocument();
         expect(await screen.findByText('310')).toBeInTheDocument();
     });
 
     it('should show spinner before finished loading', async () => {
-        const bookDetails = { id: bookId, title: 'The Hobbit', author: 'J.R.R. Tolkien', pages: '310' };
         givenBookFetch(bookId, bookDetails);
         renderComponent(bookId);
 
         expect(screen.queryByTestId('spinner')).toBeInTheDocument();
         await waitForElementToBeRemoved(() => screen.getByTestId('spinner'));
+    });
+
+    it('should not display category if none assigned', async () => {
+        const nonCategoryBook = { id: bookId, title: 'The Hobbit', author: 'J.R.R. Tolkien', pages: '310' }
+        givenBookFetch(bookId, nonCategoryBook);
+
+        renderComponent(bookId);
+
+        await waitForElementToBeRemoved(() => screen.getByTestId('spinner'));
+        expect(screen.queryByText('Category:')).not.toBeInTheDocument();
     });
 
     it('should show error message and hide spinner when could not fetch book details', async () => {
@@ -41,7 +52,6 @@ describe('Displaying book details', () => {
     });
 
     it('should allow to remove a book', async () => {
-        const bookDetails = { id: bookId, title: 'The Hobbit', author: 'J.R.R. Tolkien', pages: '310' };
         givenBookFetch(bookId, bookDetails);
         renderComponent(bookId);
 
@@ -53,7 +63,6 @@ describe('Displaying book details', () => {
     });
 
     it('should allow to get back to list', async () => {
-        const bookDetails = { id: bookId, title: 'The Hobbit', author: 'J.R.R. Tolkien', pages: '310' };
         givenBookFetch(bookId, bookDetails);
         renderComponent(bookId);
 
@@ -64,25 +73,26 @@ describe('Displaying book details', () => {
     });
 
     it('should allow to edit a book', async () => {
-        const bookDetails = { id: bookId, title: 'The Hobbit', author: 'J.R.R. Tolkien', pages: '310' };
         givenBookFetch(bookId, bookDetails);
         renderComponent(bookId);
 
         const editButton = await screen.findByRole('button', { name: 'Edit' });
         userEvent.click(editButton);
 
-        givenBookUpdate(bookId, { id: bookId, title: 'Harry Potter', author: 'J.K. Rowling', pages: '550' })
+        givenBookUpdate(bookId, { id: bookId, title: 'Harry Potter', author: 'J.K. Rowling', pages: '550', category: 'Sci-Fi' })
         userEvent.clear(titleInput());
         userEvent.clear(authorInput());
         userEvent.clear(pagesInput());
         userEvent.type(titleInput(), 'Harry Potter');
         userEvent.type(authorInput(), 'J.K. Rowling');
         userEvent.type(pagesInput(), '550');
+        userEvent.selectOptions(categorySelect(), 'Sci-Fi');
         userEvent.click(saveButton());
 
         expect(await screen.findByText('Harry Potter')).toBeInTheDocument();
         expect(await screen.findByText('J.K. Rowling')).toBeInTheDocument();
         expect(await screen.findByText('550')).toBeInTheDocument();
+        expect(await screen.findByText('Sci-Fi')).toBeInTheDocument();
     });
 
     const renderComponent = (bookId) => {
@@ -97,6 +107,7 @@ describe('Displaying book details', () => {
     const titleInput = () => screen.getByLabelText('Title');
     const authorInput = () => screen.getByLabelText('Author');
     const pagesInput = () => screen.getByLabelText('Pages');
+    const categorySelect = () => screen.getByLabelText('Category');
     const saveButton = () => screen.getByRole('button', { name: 'Save' });
 
     const givenBookFetch = (bookId, bookDetails) => {
