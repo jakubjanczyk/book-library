@@ -9,7 +9,7 @@
 .dataContainer {
     width: 1200px;
     display: grid;
-    grid-template-columns: 250px 1fr;
+    grid-template-columns: 250px minmax(700px, 1fr);
 }
 
 .list {
@@ -32,7 +32,7 @@
 
 .item {
     height: 120px;
-    width: 580px;
+    width: 100%;
     border: 1px solid darkgray;
     border-radius: 4px;
     padding: 16px;
@@ -65,7 +65,7 @@
 }
 
 .listContainer {
-    width: 1000px;
+    width: 700px;
     display: flex;
     justify-content: flex-start;
 }
@@ -80,4 +80,22 @@
 
 .noBooksText {
     margin-bottom: 24px;
+}
+
+.listHeader {
+    display: flex;
+    width: 100%;
+}
+
+.sortElement {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-left: auto;
+    margin-bottom: 0;
+}
+
+.sortLabel {
+    margin-right: 8px;
+    margin-bottom: 0;
 }

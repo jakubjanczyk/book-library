@@ -7,6 +7,8 @@ import { useBooks } from './BooksList.hooks';
 import { LoadingErrorState } from '../../components/LoadingErrorState/LoadingErrorState';
 import { categories } from '../../static/categories';
 import classNames from 'classnames';
+import Form from 'react-bootstrap/Form';
+import { sortOptions } from '../../static/sortOptions';
 
 const NewBookButton = () => (
   <NavLink to={'/books/new'}>
@@ -23,6 +25,9 @@ export const BooksList = () => {
 
     const handleCategoryClick = (category) => () => {
         updateFilters({ category: filters.category === category ? undefined : category });
+    };
+    const handleSortChange = (event) => {
+        updateFilters({ sort: event.target.value })
     };
     return (
       <div className={styles.container}>
@@ -56,7 +61,17 @@ export const BooksList = () => {
                         )
                         : (
                           <div className={styles.list}>
+                              <div className={styles.listHeader}>
                               <NewBookButton />
+                              <Form.Group className={styles.sortElement}>
+                                  <Form.Label htmlFor={'sort'} className={styles.sortLabel}>
+                                      Sort:
+                                  </Form.Label>
+                                  <Form.Control id={'sort'} as={'select'} placeholder="Select category" value={filters.sort || 'asc'} onChange={handleSortChange}>
+                                      {sortOptions().map(sortOption => (<option key={sortOption.key} value={sortOption.key}>{sortOption.label}</option>))}
+                                  </Form.Control>
+                              </Form.Group>
+                              </div>
                               <ul className={styles.items}>
                                   {
                                       books.map(book => (

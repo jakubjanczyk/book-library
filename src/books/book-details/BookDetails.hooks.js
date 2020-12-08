@@ -32,7 +32,7 @@ export const useBookDetails = () => {
     const update = useCallback(async (newDetails) => {
         setUpdateError(false);
         try {
-            const updated = await httpClient().put(`books/${bookId}`, { ...newDetails, id: bookId });
+            const updated = await httpClient().put(`books/${bookId}`, newDetails);
             setBookDetails(updated);
         } catch (e) {
             setUpdateError(true);

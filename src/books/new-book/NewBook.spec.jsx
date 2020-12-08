@@ -6,9 +6,23 @@ import nock from 'nock';
 import { BrowserRouter } from 'react-router-dom';
 import { pathToBeChangedTo } from '../../test-utils/router-utils';
 
+const createTimeMock = () => {
+    const originalNow = Date.now;
+    return {
+        setNow(timestamp) {
+            Date.now = jest.fn().mockReturnValue(timestamp);
+        },
+        reset() {
+            Date.now = originalNow
+        }
+    }
+}
+
 describe('Adding a book', () => {
+    const timeMock = createTimeMock();
     beforeEach(() => {
-        nock.cleanAll()
+        timeMock.reset();
+        nock.cleanAll();
     })
 
     it('should display necessary inputs to create a book', () => {
@@ -60,7 +74,15 @@ describe('Adding a book', () => {
     });
 
     it('should allow to save new book with all fields provided and change page to details', async () => {
-        givenSaveRequest({ title: 'The Hobbit', author: 'J.R.R. Tolkien', pages: '310', category: 'Fantasy' }, '12345');
+        timeMock.setNow(23456);
+        const bookToSave = {
+            title: 'The Hobbit',
+            author: 'J.R.R. Tolkien',
+            pages: '310',
+            category: 'Fantasy',
+            created: 23456
+        };
+        givenSaveRequest(bookToSave, '12345');
         renderComponent();
 
         userEvent.type(titleInput(), 'The Hobbit');

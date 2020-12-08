@@ -9,7 +9,7 @@ export const useBookSave = () => {
     const handleSave = useCallback(async (bookData) => {
         setError(false);
         try {
-            const data = await httpClient().post('books', bookData);
+            const data = await httpClient().post('books', {...bookData, created: Date.now()});
             history.push(`/books/${data.id}`);
         } catch (e) {
             setError(true);

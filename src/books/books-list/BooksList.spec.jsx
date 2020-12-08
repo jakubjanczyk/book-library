@@ -20,8 +20,8 @@ describe('Books list', () => {
 
     it('should fetch and display list of available books', async () => {
         const books = [
-            { id: '1', title: 'The Fellowship of the Ring', author: 'J.R.R. Tolkien', pages: '423' },
-            { id: '2', title: 'The Hobbit', author: 'J.R.R. Tolkien', pages: '310' },
+            fellowshipOfTheRing(),
+            theHobbit(),
         ];
         givenBooksFetched(books);
         renderComponent();
@@ -31,8 +31,8 @@ describe('Books list', () => {
 
     it('should display books alphabetically', async () => {
         const books = [
-            { id: '2', title: 'The Hobbit', author: 'J.R.R. Tolkien', pages: '310' },
-            { id: '1', title: 'The Fellowship of the Ring', author: 'J.R.R. Tolkien', pages: '423' },
+            theHobbit(),
+            fellowshipOfTheRing(),
         ];
         givenBooksFetched(books);
         renderComponent();
@@ -58,8 +58,8 @@ describe('Books list', () => {
 
     it('should move to book details page when book clicked', async () => {
         const books = [
-            { id: '1', title: 'The Fellowship of the Ring', author: 'J.R.R. Tolkien', pages: '423' },
-            { id: '2', title: 'The Hobbit', author: 'J.R.R. Tolkien', pages: '310' },
+            fellowshipOfTheRing(),
+            theHobbit(),
         ];
         givenBooksFetched(books);
         renderComponent();
@@ -75,20 +75,20 @@ describe('Books list', () => {
         givenBooksFetched([]);
         renderComponent();
 
-        userEvent.click(await screen.findByRole('button', {name: /New book/}));
+        userEvent.click(await screen.findByRole('button', { name: /New book/ }));
 
         await waitFor(pathToBeChangedTo('/books/new'));
     });
 
     it('should allow to create new book when some books exist', async () => {
         const books = [
-            { id: '1', title: 'The Fellowship of the Ring', author: 'J.R.R. Tolkien', pages: '423' },
-            { id: '2', title: 'The Hobbit', author: 'J.R.R. Tolkien', pages: '310' },
+            fellowshipOfTheRing(),
+            theHobbit(),
         ];
         givenBooksFetched(books);
         renderComponent();
 
-        userEvent.click(await screen.findByRole('button', {name: /New book/}));
+        userEvent.click(await screen.findByRole('button', { name: /New book/ }));
 
         await waitFor(pathToBeChangedTo('/books/new'));
     });
@@ -106,8 +106,8 @@ describe('Books list', () => {
 
         it('should click on category and filter books by this category', async () => {
             givenBooksFetched([
-                { id: '1', title: 'The Fellowship of the Ring', author: 'J.R.R. Tolkien', pages: '423', category: 'Fantasy' },
-                { id: '2', title: 'The Hobbit', author: 'J.R.R. Tolkien', pages: '310', category: 'Fantasy' },
+                fellowshipOfTheRing(),
+                theHobbit(),
                 { id: '3', title: 'Dune', author: 'Frank Herbert', pages: '890', category: 'Sci-Fi' },
             ]);
             renderComponent();
@@ -119,8 +119,8 @@ describe('Books list', () => {
 
         it('should show no books placeholder when filtered out everything', async () => {
             givenBooksFetched([
-                { id: '1', title: 'The Fellowship of the Ring', author: 'J.R.R. Tolkien', pages: '423', category: 'Fantasy' },
-                { id: '2', title: 'The Hobbit', author: 'J.R.R. Tolkien', pages: '310', category: 'Fantasy' },
+                fellowshipOfTheRing(),
+                theHobbit(),
                 { id: '3', title: 'Dune', author: 'Frank Herbert', pages: '890', category: 'Sci-Fi' },
             ]);
             renderComponent();
@@ -132,8 +132,8 @@ describe('Books list', () => {
 
         it('should click second time on category and show all books', async () => {
             givenBooksFetched([
-                { id: '1', title: 'The Fellowship of the Ring', author: 'J.R.R. Tolkien', pages: '423', category: 'Fantasy' },
-                { id: '2', title: 'The Hobbit', author: 'J.R.R. Tolkien', pages: '310', category: 'Fantasy' },
+                fellowshipOfTheRing(),
+                theHobbit(),
                 { id: '3', title: 'Dune', author: 'Frank Herbert', pages: '890', category: 'Sci-Fi' },
             ]);
             renderComponent();
@@ -146,8 +146,8 @@ describe('Books list', () => {
 
         it('should allow to select unassigned books', async () => {
             givenBooksFetched([
-                { id: '1', title: 'The Fellowship of the Ring', author: 'J.R.R. Tolkien', pages: '423', category: 'Fantasy' },
-                { id: '2', title: 'The Hobbit', author: 'J.R.R. Tolkien', pages: '310', category: 'Fantasy' },
+                fellowshipOfTheRing(),
+                theHobbit(),
                 { id: '3', title: 'Dune', author: 'Frank Herbert', pages: '890' },
             ]);
             renderComponent();
@@ -159,8 +159,8 @@ describe('Books list', () => {
 
         it('should save selected category to URL', async () => {
             givenBooksFetched([
-                { id: '1', title: 'The Fellowship of the Ring', author: 'J.R.R. Tolkien', pages: '423', category: 'Fantasy' },
-                { id: '2', title: 'The Hobbit', author: 'J.R.R. Tolkien', pages: '310', category: 'Fantasy' },
+                fellowshipOfTheRing(),
+                theHobbit(),
                 { id: '3', title: 'Dune', author: 'Frank Herbert', pages: '890', category: 'Sci-Fi' },
             ]);
             renderComponent();
@@ -172,27 +172,141 @@ describe('Books list', () => {
 
         it('should restore selected category from URL', async () => {
             givenBooksFetched([
-                { id: '1', title: 'The Fellowship of the Ring', author: 'J.R.R. Tolkien', pages: '423', category: 'Fantasy' },
-                { id: '2', title: 'The Hobbit', author: 'J.R.R. Tolkien', pages: '310', category: 'Fantasy' },
+                fellowshipOfTheRing(),
+                theHobbit(),
                 { id: '3', title: 'Dune', author: 'Frank Herbert', pages: '890', category: 'Sci-Fi' },
             ]);
 
-            renderComponent({searchString: '?category=Fantasy'});
+            renderComponent({ searchString: '?category=Fantasy' });
 
             expect(await getDisplayedBooksTitles()).toEqual(['The Fellowship of the Ring', 'The Hobbit']);
         });
     });
 
-    const renderComponent = ({searchString = ''} = {}) => {
+    describe('handling sort', () => {
+        it('should display available sort options', async () => {
+            givenBooksFetched([
+                fellowshipOfTheRing()
+            ]);
+            renderComponent();
+
+            const sortSelect = await getSortSelect();
+            const allSortOptions = within(sortSelect).getAllByRole('option').map(item => item.textContent);
+
+            expect(allSortOptions).toEqual(['Ascending', 'Descending', 'Most recent']);
+        });
+
+        it('should not display sort select when no books displayed', async () => {
+            givenBooksFetched([]);
+            renderComponent();
+
+            await waitForElementToBeRemoved(() => screen.getByTestId('spinner'));
+
+            expect(screen.queryByLabelText('Sort:')).not.toBeInTheDocument();
+        });
+
+        it('should have ascending selected by default', async () => {
+            givenBooksFetched([
+                fellowshipOfTheRing()
+            ]);
+            renderComponent();
+
+            const sortSelect = await getSortSelect();
+
+            expect(sortSelect).toHaveDisplayValue('Ascending');
+        });
+
+        it('should change sort to descending', async () => {
+            givenBooksFetched([
+                fellowshipOfTheRing(),
+                theHobbit()
+            ]);
+            renderComponent();
+
+            const sortSelect = await getSortSelect();
+            userEvent.selectOptions(sortSelect, 'Descending');
+
+            expect(await getDisplayedBooksTitles()).toEqual(['The Hobbit', 'The Fellowship of the Ring']);
+        });
+
+        it('should change sort to most recent', async () => {
+            givenBooksFetched([
+                fellowshipOfTheRing({created: 12345}),
+                theHobbit({created: 23456})
+            ]);
+            renderComponent();
+
+            const sortSelect = await getSortSelect();
+            userEvent.selectOptions(sortSelect, 'Most recent');
+
+            expect(await getDisplayedBooksTitles()).toEqual(['The Hobbit', 'The Fellowship of the Ring']);
+        });
+
+        it('should save sort order to URL', async () => {
+            givenBooksFetched([
+                fellowshipOfTheRing({created: 345678}),
+                theHobbit({created: 12345})
+            ]);
+            renderComponent();
+
+            const sortSelect = await getSortSelect();
+            userEvent.selectOptions(sortSelect, 'Most recent');
+
+            expect(window.location.search).toEqual('?sort=recent');
+        });
+
+        it('should restore sort order from URL', async () => {
+            givenBooksFetched([
+                fellowshipOfTheRing({created: 345678}),
+                theHobbit({created: 12345})
+            ]);
+            renderComponent({ searchString: '?sort=desc' });
+
+            expect(await getDisplayedBooksTitles()).toEqual(['The Hobbit', 'The Fellowship of the Ring']);
+        });
+
+    });
+
+    describe('combining filters', () => {
+        it('should handle both sort and category filter in url', async () => {
+            givenBooksFetched([
+                fellowshipOfTheRing(),
+                theHobbit()
+            ]);
+            renderComponent();
+
+            await clickCategory('Fantasy');
+            const sortSelect = await getSortSelect();
+            userEvent.selectOptions(sortSelect, 'Most recent');
+
+            expect(window.location.search).toEqual('?category=Fantasy&sort=recent');
+        });
+
+        it('should restore all filters from url', async () => {
+            givenBooksFetched([
+                fellowshipOfTheRing(),
+                theHobbit(),
+                { id: '3', title: 'Dune', author: 'Frank Herbert', pages: '890', category: 'Sci-Fi' },
+            ]);
+
+            renderComponent({searchString: '?category=Fantasy&sort=desc'});
+
+            expect(await getDisplayedBooksTitles()).toEqual(['The Hobbit', 'The Fellowship of the Ring']);
+        });
+    });
+
+    const renderComponent = ({ searchString = '' } = {}) => {
         window.history.pushState({}, 'Books list', `/books${searchString}`);
         return render(
           <BrowserRouter>
               <BooksList />
           </BrowserRouter>
         );
-    }
+    };
 
     const noBooksPlaceholder = async () => screen.findByText('There are no books yet. Change filters or create a new book.');
+
+    const getSortSelect = async () => await screen.findByLabelText('Sort:');
 
     const getDisplayedBooksTitles = async () => {
         const bookTitles = await screen.findAllByTestId('book-title');
@@ -213,6 +327,10 @@ describe('Books list', () => {
     const givenBooksFetchFailed = () => {
         nock('http://localhost')
           .get('/api/books')
-          .reply(500, { });
+          .reply(500, {});
     };
+
+    const fellowshipOfTheRing = (config = {}) => ({ id: '1', title: 'The Fellowship of the Ring', author: 'J.R.R. Tolkien', pages: '423', category: 'Fantasy', created: 12345, ...config });
+    const theHobbit = (config = {}) => ({ id: '2', title: 'The Hobbit', author: 'J.R.R. Tolkien', pages: '310', category: 'Fantasy', created: 23456, ...config });
+
 });

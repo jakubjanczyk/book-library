@@ -4,14 +4,19 @@ import { useFetchRequest } from '../../common/use-fetch-request';
 import { useHistory, useLocation } from 'react-router';
 import * as qs from 'qs';
 
-const orderedBooks = books => orderBy(books, 'title', 'asc');
 
+const parseFilters = searchString => qs.parse(searchString, { ignoreQueryPrefix: true });
 const useFilters = () => {
     const history = useHistory();
     const location = useLocation();
-    const filters = useMemo(() => qs.parse(location.search, { ignoreQueryPrefix: true }), [location.search]);
+    const filters = useMemo(() => parseFilters(location.search), [location]);
     const updateFilters = useCallback((newFilters) => {
-        const newLocationSearch = qs.stringify(newFilters, { addQueryPrefix: true });
+        const previousFilters = parseFilters(history.location.search);
+        const allFilters = {
+            ...previousFilters,
+            ...newFilters
+        };
+        const newLocationSearch = qs.stringify(allFilters, { addQueryPrefix: true });
         if (newLocationSearch !== history.location) {
             history.push({ search: newLocationSearch, pathname: '/books' });
         }
@@ -26,6 +31,12 @@ export const useBooks = () => {
     const { filters, updateFilters } = useFilters();
     const { error, loading, fetchData } = useFetchRequest();
 
+
+    const orderedBooks = useCallback(books => {
+        const { by, order } = filters.sort === 'recent' ? { by: 'created', order: 'desc' } : { by: 'title', order: filters.sort };
+        return orderBy(books, by, order);
+    }, [filters.sort]);
+
     const updateBooks = useCallback(() => {
         if (initialBooks.current) {
             const filteredBooks = filters.category
@@ -37,7 +48,7 @@ export const useBooks = () => {
               : initialBooks.current;
             setBooks(orderedBooks(filteredBooks));
         }
-    }, [filters]);
+    }, [filters.category, orderedBooks]);
 
     useEffect(() => {
         const doFetch = async () => {
