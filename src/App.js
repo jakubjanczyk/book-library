@@ -12,9 +12,7 @@ function App() {
       <Switch>
         <Route path={'/books/new'} component={NewBook}/>
         <Route path={'/books/:id'} component={BookDetails}/>
-        <Route path={'/books'} component={BooksList}/>
-        <Route path={'/'} component={BooksList}/>
-        <Route component={() => <div/>}/>
+        <Route path={['/books', '/']} component={BooksList}/>
       </Switch>
     </main>
   );
