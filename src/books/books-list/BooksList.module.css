@@ -1,10 +1,3 @@
-.container {
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-}
-
 .dataContainer {
     width: 100%;
     display: grid;
@@ -14,98 +7,9 @@
     grid-gap: 8px;
 }
 
-.list {
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-}
-
-.items {
-    margin-top: 16px;
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    padding: 0;
-
-    overflow: auto;
-}
-
-.item {
-    height: 120px;
-    width: 100%;
-    border: 1px solid darkgray;
-    border-radius: 4px;
-    padding: 16px;
-    color: black;
-}
-
-.item + .item {
-    margin-top: 16px;
-}
-
-.categories {
-    padding: 0 0 0 8px;
-}
-
-.categoriesHeader {
-
-}
-
-.categoriesList {
-    list-style: none;
-    margin: 0;
-}
-
-.category {
-    cursor: pointer;
-}
-
-.categorySelected {
-    font-weight: 700;
-}
-
 .listContainer {
     padding: 0 8px 0 0;
     width: 100%;
     display: flex;
     justify-content: flex-start;
-}
-
-.noBooksContainer {
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-}
-
-.noBooksText {
-    margin-top: 16px;
-    margin-bottom: 24px;
-    text-align: center;
-    align-self: center;
-
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-}
-
-.listHeader {
-    display: flex;
-    width: 100%;
-}
-
-.sortElement {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-left: auto;
-    margin-bottom: 0;
-}
-
-.sortLabel {
-    margin-right: 8px;
-    margin-bottom: 0;
 }

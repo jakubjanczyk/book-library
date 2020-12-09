@@ -3,9 +3,10 @@ import { Header } from '../../components/Header/Header';
 import styles from './BooksList.module.css';
 import { useBooks } from './BooksList.hooks';
 import { LoadingErrorState } from '../../components/LoadingErrorState/LoadingErrorState';
-import { Categories } from './components/Categories';
-import { NoBooks } from './components/NoBooks';
-import { List } from './components/List';
+import { Categories } from './components/Categories/Categories';
+import { NoBooks } from './components/NoBooks/NoBooks';
+import { List } from './components/List/List';
+import { PageContainer } from '../../components/PageContainer/PageContainer';
 
 export const BooksList = () => {
     const { books, error, loading, updateFilters, filters } = useBooks();
@@ -14,7 +15,7 @@ export const BooksList = () => {
     const handleSortChange = (sort) => updateFilters({ sort });
 
     return (
-      <div className={styles.container}>
+      <PageContainer>
           <Header>
               Library
           </Header>
@@ -33,6 +34,6 @@ export const BooksList = () => {
             )
             : null
           }
-      </div>
+      </PageContainer>
     );
 };

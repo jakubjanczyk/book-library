@@ -1,5 +1,5 @@
-import styles from '../BooksList.module.css';
-import { categories } from '../../../static/categories';
+import styles from './Categories.module.css';
+import { categories } from '../../../../static/categories';
 import classNames from 'classnames';
 import React from 'react';
 import * as PropTypes from 'prop-types';
@@ -8,7 +8,7 @@ export const Categories = ({ currentCategory, onCategoryClick }) => {
     const allCategories = [...categories(), 'Unassigned'];
     return (
       <div data-testid={'categories'} className={styles.categories}>
-          <h3 className={styles.categoriesHeader}>Select category</h3>
+          <h3>Choose category</h3>
           <ul className={styles.categoriesList}>
               {allCategories.map((category) => (
                 <li

@@ -4,7 +4,7 @@ import React from 'react';
 
 export const NewBookButton = () => (
   <NavLink to={'/books/new'}>
-      <Button>
+      <Button variant={'primary'}>
           New book
       </Button>
   </NavLink>

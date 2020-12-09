@@ -57,7 +57,7 @@ export const BookForm = ({ initialState, save, cancel, error }) => {
               <Button type={'submit'}>
                   Save
               </Button>
-              <Button onClick={cancel} variant={'danger'}>
+              <Button onClick={cancel} variant={'secondary'}>
                   Cancel
               </Button>
           </ButtonToolbar>

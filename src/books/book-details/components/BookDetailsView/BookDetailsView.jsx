@@ -1,4 +1,4 @@
-import styles from './BookDetails.module.css';
+import styles from './BookDetailsView.module.css';
 import ButtonToolbar from 'react-bootstrap/ButtonToolbar';
 import Button from 'react-bootstrap/Button';
 import React from 'react';
@@ -6,9 +6,9 @@ import * as PropTypes from 'prop-types';
 
 export const BookDetailsView = ({ bookDetails, handleEdit, handleRemove }) => (
   <div className={styles.details}>
-      <h2 className={styles.title}>
+      <h1 className={styles.title}>
           {bookDetails.title}
-      </h2>
+      </h1>
       <p className={styles.author}>
           {bookDetails.author}
       </p>

@@ -2,13 +2,18 @@
 .header {
     display: flex;
     flex-direction: column;
-    height: 128px;
+    flex-shrink: 0;
+    height: 100px;
     width: 100%;
-    background-color: #393e46;
+    background-color: #1d3557;
 
     color: white;
     margin-bottom: 16px;
-    padding: 16px 48px;
-    justify-content: flex-start;
+    padding: 8px 48px;
+    justify-content: center;
     align-items: center;
+}
+
+.header a {
+    color: #a8dadc;
 }

@@ -1,11 +1,11 @@
 import React, { useCallback, useState } from 'react';
-import styles from './BookDetails.module.css';
 import { Header } from '../../components/Header/Header';
 import { useBookDetails, useBookRemove } from './BookDetails.hooks';
 import { LoadingErrorState } from '../../components/LoadingErrorState/LoadingErrorState';
 import { BookForm } from '../components/BookForm/BookForm';
-import { BookDetailsView } from './BookDetailsView';
+import { BookDetailsView } from './components/BookDetailsView/BookDetailsView';
 import { BackToLibrary } from '../../components/BackToLibrary/BackToLibrary';
+import { PageContainer } from '../../components/PageContainer/PageContainer';
 
 
 export const BookDetails = () => {
@@ -18,9 +18,9 @@ export const BookDetails = () => {
     const handleSave =  useCallback((details) => update(details).then(closeEdit), [closeEdit, update]);
     
     return (
-      <div className={styles.container}>
+      <PageContainer>
           <Header renderSubHeader={() => <BackToLibrary/>}>
-              Book Details
+              Book details
           </Header>
           <LoadingErrorState errorText={'Unable to fetch book details, please try again.'} loading={loading} error={error}/>
           {
@@ -30,6 +30,6 @@ export const BookDetails = () => {
                   : <BookDetailsView bookDetails={bookDetails} handleEdit={handleEdit} handleRemove={handleRemove} />
                 )
           }
-      </div>
+      </PageContainer>
     );
 };

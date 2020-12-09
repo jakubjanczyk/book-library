@@ -15,6 +15,10 @@
     display: flex;
 }
 
+.buttons button {
+    width: 80px;
+}
+
 .buttons > button + button {
     margin-left: 16px;
 }

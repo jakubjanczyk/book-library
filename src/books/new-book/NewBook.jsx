@@ -1,9 +1,9 @@
 import React from 'react';
 import { useHistory } from 'react-router';
-import styles from './NewBook.module.css';
 import { Header } from '../../components/Header/Header';
 import { useBookSave } from './NewBook.hooks';
 import { BookForm } from '../components/BookForm/BookForm';
+import { PageContainer } from '../../components/PageContainer/PageContainer';
 
 export const NewBook = () => {
     const { save, saveError } = useBookSave();
@@ -14,12 +14,12 @@ export const NewBook = () => {
     };
 
     return (
-      <div className={styles.container}>
+      <PageContainer>
           <Header>
-              Add new book
+              New book
           </Header>
           <BookForm initialState={{ title: '', author: '', pages: '' }} save={save} cancel={handleCancel} error={saveError}/>
-      </div>
+      </PageContainer>
     );
 };
 
