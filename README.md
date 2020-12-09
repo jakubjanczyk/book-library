@@ -1,4 +1,4 @@
-#Books library
+# Books library
 
 This projects aims to create a book library. Users can add, remove and edit books. 
 Displayed books can be sorted by different conditions and they can be filtered down to selected category.
